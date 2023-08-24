@@ -13,10 +13,9 @@ char * find_categorie_id_by_name(DtwResource *database,const char *name){
     int size = cJSON_GetArraySize(categories);
     for(int i = 0; i <size; i++){
         cJSON *current = cJSON_GetArrayItem(categories,i);
-        printf("pego uaqui %s\n",current->valuestring);
+    
         if(!strcmp(current->valuestring,name)){
-
-            char *result = strdup(current->valuestring);
+            char *result = strdup(current->string);          
             cJSON_free(current);
             return result;
         }

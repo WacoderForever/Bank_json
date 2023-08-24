@@ -4,6 +4,7 @@
 #include "dependencies/CTextEngine.h"
 
 DtwNamespace dtw;
+CTextNamespace ctext;
 
 #include "categories/categories.h"
 #include "categories/categories.c"
@@ -11,7 +12,8 @@ DtwNamespace dtw;
 int main(){
 
     dtw = newDtwNamespace();
-
+    ctext = newCTextNamespace();
+    
     DtwResource *database = dtw.resource.newResource("database");
 
     char *categorie_id = find_categorie_id_by_name(database,"Food");
