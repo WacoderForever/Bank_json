@@ -18,6 +18,22 @@ Will remove an categorie into the system
 These can fork into two actions, if there is transactions inserted it dont remove the categorie
 if there is not , it removes 
 
+## Add an Account
+Will add an accunt  into  o the system
+~~~shel
+./main.out 
+    type the action: add_account   
+    type the name: wallet
+~~~
+
+## Remove an Account
+Will remove an account into the system 
+~~~shel
+./main.out 
+    type the action: remove_account   
+    type the name: wallet
+~~~
+
 
 ## Add TranTransaction 
 ~~~shel
