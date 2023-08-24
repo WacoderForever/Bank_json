@@ -5,6 +5,7 @@
 
 DtwNamespace dtw;
 CTextNamespace ctext;
+CliInterface cli;
 
 #include "declaration.h"
 #include "definition.h"
@@ -14,11 +15,19 @@ int main(){
 
     dtw = newDtwNamespace();
     ctext = newCTextNamespace();
-
+    cli = newCliInterface();
     DtwResource *database = dtw.resource.newResource("database");
 
-    create_categorie(database,"aaaaaaaaaaaaa");
+    int option = cli.ask_option(&cli,"type the action","add-categorie | remove categorie");
+    bool error = false;
+    if(option == ADD_CATEGORIE){
+        error = add_categorie(database);
+    }
 
-    dtw.resource.commit(database);
+
+    if(!error){
+        dtw.resource.commit(database);
+    }
+    
     dtw.resource.free(database);
 }
