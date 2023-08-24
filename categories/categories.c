@@ -1,9 +1,14 @@
 
 
-
-cJSON * get_categorie_json(struct DtwResource *database){
+DtwResource * get_categories_resource(struct DtwResource *database){
     DtwResource *props = dtw.resource.sub_resource(database,"props");
     DtwResource *categories = dtw.resource.sub_resource(props,"categories.json");
+    return categories;
+}
+
+
+cJSON * get_categorie_json(struct DtwResource *database){
+    DtwResource *categories = get_categories_resource(database);
     char * element = dtw.resource.get_string(categories);
     return  cJSON_Parse(element);
 }
@@ -21,4 +26,15 @@ char * find_categorie_id_by_name(DtwResource *database,const char *name){
         }
     }
     return NULL;
+}
+
+void rename_categorie_by_id(DtwResource *database, const char *id, const char *new_name){
+    cJSON *element = get_categorie_json(database);
+    cJSON_DeleteItemFromObject(element,id);
+    cJSON_AddStringToObject(element,id,new_name);
+    char *generated_json  = cJSON_Print(element);
+    DtwResource *categories = get_categories_resource(database);
+    dtw.resource.set_string(categories,generated_json);
+    free(generated_json);
+    cJSON_Delete(element);
 }
