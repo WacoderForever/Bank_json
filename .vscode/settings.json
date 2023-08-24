@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "extras.c": "cpp",
+        "categories.c": "cpp"
+    }
+}

@@ -32,9 +32,23 @@ void rename_categorie_by_id(DtwResource *database, const char *id, const char *n
     cJSON *element = get_categorie_json(database);
     cJSON_DeleteItemFromObject(element,id);
     cJSON_AddStringToObject(element,id,new_name);
-    char *generated_json  = cJSON_Print(element);
-    DtwResource *categories = get_categories_resource(database);
-    dtw.resource.set_string(categories,generated_json);
-    free(generated_json);
-    cJSON_Delete(element);
+    
+    add_json_to_resource_and_delete_json(
+         get_categories_resource(database),
+         element
+    );
+}
+
+void create_categorie(DtwResource *database,const char *name){
+    cJSON *element = get_categorie_json(database);
+    int size = cJSON_GetArraySize(element);
+    char new_id[30] = {0};
+    sprintf(new_id,"id_%d",size);
+    cJSON_AddStringToObject(element,new_id,name);
+
+    add_json_to_resource_and_delete_json(
+         get_categories_resource(database),
+         element
+    );
+    
 }
