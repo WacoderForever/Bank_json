@@ -18,13 +18,16 @@ int main(){
     cli = newCliInterface();
     DtwResource *database = dtw.resource.newResource("database");
 
-    int option = cli.ask_option(&cli,"type the action","add-categorie | remove categorie");
+    int option = cli.ask_option(&cli,"type the action","add-categorie | remove-categorie");
     bool error = false;
     if(option == ADD_CATEGORIE){
         error = add_categorie(database);
     }
 
-
+    if(option == REMOVE_CATEGORIE){
+        char *name=cli.ask_string(&cli,"Enter name of category to remove",CLI_TRIM);
+        error==remove_categorie(database,name);
+    }
     if(!error){
         dtw.resource.commit(database);
     }
