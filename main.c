@@ -35,9 +35,11 @@ int main(int argc , char **argv){
     }
 
     else if(strcmp(option,"remove-categorie") ==0){        
-        error==remove_categorie(database,entry);
+        error=remove_categorie(database,entry);
     }
-
+    else if(strcmp(option,"rename-categorie")==0){
+        error=rename_categorie(database,entry);
+    }
 
     else{
         printf("option not in ('add-categorie','remove-categorie')\n");

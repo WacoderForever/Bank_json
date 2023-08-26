@@ -1,0 +1,1 @@
+bool rename_categorie(struct DtwResource *database,CliEntry *entry);
