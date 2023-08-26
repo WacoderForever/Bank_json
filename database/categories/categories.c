@@ -56,7 +56,7 @@ void remove_categorie_by_id(DtwResource *database, const char *id){
 void create_categorie(DtwResource *database,const char *name){
     cJSON *element = get_categorie_json(database);
     char *id = dtw_generate_sha_from_string(name);
-    
+    id[10] = '\0';
     cJSON_AddStringToObject(element,id,name);
     free(id);
     add_json_to_resource_and_delete_json(
