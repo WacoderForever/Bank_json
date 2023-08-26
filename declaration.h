@@ -1,5 +1,5 @@
 
 
 #include "extras/extras.h"
-#include "categories/categories.h"
+#include "database/declaration.h"
 #include "actions/declaration.h"
