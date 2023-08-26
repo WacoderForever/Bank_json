@@ -24,10 +24,11 @@ char * find_categorie_id_by_name(DtwResource *database,const char *name){
     
         if(!strcmp(current->valuestring,name)){
             char *result = strdup(current->string);          
-            cJSON_free(categories);
+            cJSON_Delete(categories);
             return result;
         }
     }
+    cJSON_Delete(categories);
     return NULL;
 }
 
