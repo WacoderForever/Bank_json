@@ -10,6 +10,9 @@ DtwResource * get_categories_resource(struct DtwResource *database){
 cJSON * get_categorie_json(struct DtwResource *database){
     DtwResource *categories = get_categories_resource(database);
     char * element = dtw.resource.get_string(categories);
+    if(element == NULL){
+        return cJSON_CreateObject();
+    }
     return  cJSON_Parse(element);
 }
 
@@ -21,7 +24,7 @@ char * find_categorie_id_by_name(DtwResource *database,const char *name){
     
         if(!strcmp(current->valuestring,name)){
             char *result = strdup(current->string);          
-            cJSON_free(current);
+            cJSON_free(categories);
             return result;
         }
     }

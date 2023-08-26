@@ -41,14 +41,16 @@ int main(int argc , char **argv){
 
     else{
         printf("option not in ('add-categorie','remove-categorie')\n");
+        error = true;
     }
 
-    if(!error){
+    if(error == false){
         dtw.resource.commit(database);
         cli.entry.free(entry);
         dtw.resource.free(database);   
-        return 1;
+        return 0;
     }
     cli.entry.free(entry);
     dtw.resource.free(database);
+    return 1;
 }
