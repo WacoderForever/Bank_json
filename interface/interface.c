@@ -9,6 +9,6 @@ char *get_interface_name(CliEntry *entry){
         printf("name flag its empty\n");
         return NULL;
     }
-    return cli.flag.get_str(name_flag,1,CLI_CASE_SENSITIVE);
+    return cli.flag.get_str(name_flag,0,CLI_CASE_SENSITIVE);
 
 }

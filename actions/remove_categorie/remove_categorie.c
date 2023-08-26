@@ -13,6 +13,7 @@ bool remove_categorie(struct DtwResource *database,CliEntry *entry){
     }
     
     remove_categorie_by_id(database,categorie_id);
+    printf("categorie '%s' removed\n",name);
     free(categorie_id);
     
     return true;

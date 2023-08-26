@@ -14,6 +14,6 @@ bool add_categorie(DtwResource *database,CliEntry *entry){
     }
     create_categorie(database,name);
     printf("categorie '%s' added\n",name);
-    free(name);
+    
     return false;
 }
