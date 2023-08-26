@@ -16,8 +16,15 @@ int main(int argc , char **argv){
     ctext = newCTextNamespace();
     cli = newCliNamespace();
     
-    DtwResource *database = dtw.resource.newResource("database");
     CliEntry *entry = newCliEntry(argc,argv);
+
+
+    if(entry->size <= 1){
+        printf("option not provided\n");
+        cli.entry.free(entry);
+        return 1;
+    }
+    DtwResource *database = dtw.resource.newResource("data");
 
     char * option = cli.entry.get_str(entry,1,CLI_NOT_CASE_SENSITIVE);
 
@@ -38,6 +45,9 @@ int main(int argc , char **argv){
 
     if(!error){
         dtw.resource.commit(database);
+        cli.entry.free(entry);
+        dtw.resource.free(database);   
+        return 1;
     }
     cli.entry.free(entry);
     dtw.resource.free(database);

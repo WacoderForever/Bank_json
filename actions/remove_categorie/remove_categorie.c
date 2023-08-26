@@ -1,6 +1,9 @@
 bool remove_categorie(struct DtwResource *database,CliEntry *entry){
     
     char *name = get_interface_name(entry);
+    if(!name){
+        return true;
+    }
     char  *categorie_id = find_categorie_id_by_name(database,name);
     
     if(!categorie_id){
