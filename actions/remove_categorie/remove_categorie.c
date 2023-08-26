@@ -1,8 +1,10 @@
-bool remove_categorie(struct DtwResource *database,const char *name){
+bool remove_categorie(struct DtwResource *database,CliEntry *entry){
+    
+    char *name = get_interface_name(entry);
     char  *categorie_id = find_categorie_id_by_name(database,name);
     
     if(!categorie_id){
-        cli.warning(&cli,"categorie '%s' not exist\n",name);
+        printf("categorie '%s' not exist\n",name);
         free(categorie_id);
         return true;
     }

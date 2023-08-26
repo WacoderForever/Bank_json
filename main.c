@@ -24,13 +24,18 @@ int main(int argc , char **argv){
     
     bool error = false;
     if(strcmp(option,"add-categorie") ==0){
-        error = add_categorie(database);
+        error = add_categorie(database,entry);
     }
 
-    if(strcmp(option,"add-categorie") ==0){        
-        error==remove_categorie(database,name);
+    else if(strcmp(option,"remove-categorie") ==0){        
+        error==remove_categorie(database,entry);
     }
-    
+
+
+    else{
+        printf("option not in ('add-categorie','remove-categorie')\n");
+    }
+
     if(!error){
         dtw.resource.commit(database);
     }

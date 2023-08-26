@@ -1,1 +1,1 @@
-bool remove_categorie(struct DtwResource *database,const char *name);
+bool remove_categorie(struct DtwResource *database,CliEntry *entry);
