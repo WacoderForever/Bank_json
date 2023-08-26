@@ -1,13 +1,14 @@
 bool remove_categorie(struct DtwResource *database,const char *name){
-    cJSON *element=get_categorie_json(database);
-    int size=cJSON_GetArraySize(element);
-    for(int i=0;i<size;i++){
-        cJSON *current=cJSON_GetArrayItem(element,i);
-        if(!(strcmp(current->valuestring,name))){
-            cJSON_DeleteItemFromObject(current,current->string);
-            return false;
-        }
+    char  *categorie_id = find_categorie_id_by_name(database,name);
+    
+    if(!categorie_id){
+        cli.warning(&cli,"categorie '%s' not exist\n",name);
+        free(categorie_id);
+        return true;
     }
-    cJSON_free(element);
+    
+    remove_categorie_by_id(database,categorie_id);
+    free(categorie_id);
+    
     return true;
 }

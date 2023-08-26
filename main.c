@@ -1,36 +1,39 @@
 
 #include "dependencies/DoTheWord.h"
-#include "dependencies/clinput.h"
-#include "dependencies/CTextEngine.h"
+#include "dependencies/cli_entry.h"
 
 DtwNamespace dtw;
 CTextNamespace ctext;
-CliInterface cli;
+CliNamespace cli;
 
 #include "declaration.h"
 #include "definition.h"
 
 
-int main(){
+int main(int argc , char **argv){
 
     dtw = newDtwNamespace();
     ctext = newCTextNamespace();
-    cli = newCliInterface();
+    cli = newCliNamespace();
+    
     DtwResource *database = dtw.resource.newResource("database");
+    CliEntry *entry = newCliEntry(argc,argv);
 
-    int option = cli.ask_option(&cli,"type the action","add-categorie | remove-categorie");
+    char * option = cli.entry.get_str(entry,1,CLI_NOT_CASE_SENSITIVE);
+
+    
     bool error = false;
-    if(option == ADD_CATEGORIE){
+    if(strcmp(option,"add-categorie") ==0){
         error = add_categorie(database);
     }
 
-    if(option == REMOVE_CATEGORIE){
-        char *name=cli.ask_string(&cli,"Enter name of category to remove",CLI_TRIM);
+    if(strcmp(option,"add-categorie") ==0){        
         error==remove_categorie(database,name);
     }
+    
     if(!error){
         dtw.resource.commit(database);
     }
-    
+    cli.entry.free(entry);
     dtw.resource.free(database);
 }

@@ -1,6 +1,8 @@
 {
     "files.associations": {
         "extras.c": "cpp",
-        "categories.c": "cpp"
+        "categories.c": "cpp",
+        "declaration.h": "c",
+        "definition.h": "c"
     }
 }

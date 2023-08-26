@@ -39,6 +39,16 @@ void rename_categorie_by_id(DtwResource *database, const char *id, const char *n
     );
 }
 
+void remove_categorie_by_id(DtwResource *database, const char *id){
+    cJSON *element = get_categorie_json(database);
+    cJSON_DeleteItemFromObject(element,id);
+    
+    add_json_to_resource_and_delete_json(
+         get_categories_resource(database),
+         element
+    );
+}
+
 void create_categorie(DtwResource *database,const char *name){
     cJSON *element = get_categorie_json(database);
     int size = cJSON_GetArraySize(element);

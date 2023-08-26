@@ -1,3 +1,5 @@
+
+
 /*
 MIT License
 
@@ -23,7 +25,6 @@ SOFTWARE.
 */
 #ifndef CTEXTENGINE_H
 #define CTEXTENGINE_H
-
 
 
 #include <string.h>
@@ -415,9 +416,6 @@ typedef struct CTextNamespace{
 }CTextNamespace;
 
 CTextNamespace newCTextNamespace();
-
-
-
 
 
 
@@ -1374,5 +1372,531 @@ CTextNamespace newCTextNamespace(){
 }
 
 
-
 #endif // CTEXTENGINE_H
+
+#define CLI_NOT_EXIST -1
+#define CLI_BOOL CTEXT_BOOL
+#define CLI_DOUBLE CTEXT_DOUBLE
+#define CLI_LONG CTEXT_LONG
+#define CLI_STRING CTEXT_STRING
+
+
+
+
+#define PRIVATE_CLI_CHAR_TRASH 1
+#define PRIVATE_CLI_FLAG_TRASH 2
+
+typedef struct privateCliGarbageElement{
+    int type;
+    void *value;
+}privateCliGarbageElement;
+
+
+typedef struct privateCliGarbage{
+    int size;
+    privateCliGarbageElement **values;
+
+}privateCliGarbage;
+
+
+privateCliGarbage *private_cli_newGarbageArray();
+void private_CliGarbage_append(privateCliGarbage*self, int type, void *value);
+void private_cli_free_garbage(privateCliGarbage*self);
+
+
+
+
+
+int private_cli_compare_elements_size(const void *element1,const  void *element2);
+
+void private_cli_sort_text_arrays_by_size(CTextArray *element);
+
+CTextArray * private_cli_parse_flags(const char *flags,bool case_sensitive);
+
+CTextStack *private_cli_get_flag_if_its_an_flag(CTextArray *identifiers,CTextStack *possible_flag,bool case_sensitve);
+
+//getterso of arrays
+int private_cli_get_type_from_array(CTextArray *elements,int position);
+
+bool private_cli_verifiy_if_element_is_numeric(CTextArray *elements,int position);
+
+const char * private_cli_get_type_in_str_from_array(CTextArray *elements,int position);
+
+char * private_cli_get_str_from_array(privateCliGarbage *garbage, CTextArray *elements, int position,bool case_sensitive);
+
+long private_cli_get_long_from_array(CTextArray *elements,int position);
+
+double private_cli_get_double_from_array(CTextArray *elements,int position);
+
+bool private_cli_get_bool_from_array(CTextArray *elements,int position);
+
+
+typedef struct CliFlag{
+
+    CTextArray  *elements;
+    bool exist;
+    privateCliGarbage *private_garbage;
+    int size;
+
+
+
+}CliFlag;
+
+CliFlag *private_cli_newCliFlag();
+void private_cli_CliFlag_free(CliFlag *self);
+
+int CliFlag_typeof_arg(CliFlag *self, int position);
+bool CliFlag_is_numeric(CliFlag *self, int position);
+const char *CliFlag_typeof_arg_in_str(CliFlag *self, int position);
+char* CliFlag_get_str(CliFlag *self, int position, bool case_sensitive);
+long  CliFlag_get_long(CliFlag *self, int position);
+double CliFlag_get_double(CliFlag *self, int position);
+bool CliFlag_get_bool(CliFlag *self, int position);
+
+void CliFlag_represent(CliFlag *self);
+
+
+
+
+
+#define CLI_CASE_SENSITIVE true
+#define CLI_NOT_CASE_SENSITIVE false
+
+
+typedef struct CliEntry{
+
+    CTextArray * elements;
+    int size;
+    privateCliGarbage  * private_garbage;
+
+    const char *flag_identifiers;
+
+
+
+}CliEntry;
+
+CliEntry * newCliEntry(int argc, char **argv);
+int CliEntry_typeof_arg(CliEntry *self,int position);
+
+bool CliEntry_is_numeric(CliEntry *self,int position);
+
+const char *CliEntry_typeof_arg_in_str(CliEntry *self,int position);
+
+CliFlag *CliEntry_get_flag(CliEntry *self,const char *flags,bool case_sensitive);
+char*   CliEntry_get_str(CliEntry *self, int position, bool case_sensitive);
+
+long    CliEntry_get_long(CliEntry *self, int position);
+
+double  CliEntry_get_double(CliEntry *self, int position);
+
+bool  CliEntry_get_bool(CliEntry *self, int position);
+void CliEntry_free(struct CliEntry *self);
+
+void  CliEntry_represent(CliEntry *self);
+
+
+
+
+
+typedef struct CliEntryModule{
+
+    CliEntry *(*newEntry)(int argc, char **argv);
+    int (*typeof_arg)(CliEntry *self, int position);
+    bool (*is_numeric)(CliEntry *self,int position);
+    const char *(*typeof_arg_in_str)(CliEntry *self, int position);
+    CliFlag *(*get_flag)(CliEntry *self,const char *flags,bool case_sensitive);
+    char*   (*get_str)(CliEntry *self, int position, bool case_sensitive);
+
+    long    (*get_long)(CliEntry *self, int position);
+    double  (*get_double)(CliEntry *self, int position);
+    bool  (*get_bool)(CliEntry *self, int position);
+
+    void (*represent)(CliEntry *self);
+    void (*free)(CliEntry *self);
+
+}CliEntryModule;
+
+CliEntryModule newCliEntryModule();
+
+
+
+
+typedef struct CliFlagModule{
+
+    int      (*typeof_arg)(CliFlag *self, int position);
+    bool (*is_numeric)(CliFlag *self,int position);
+
+    const char *(*type_of_arg_in_str)(CliFlag *self, int position);
+    char*   (*get_str)(CliFlag *self, int position, bool case_sensitive);
+    long    (*get_long)(CliFlag *self, int position);
+    double  (*get_double)(CliFlag *self, int position);
+    bool  (*get_bool)(CliFlag *self, int position);
+    void  (*represent)(CliFlag *self);
+
+
+}CliFlagModule;
+
+CliFlagModule newCliFlagModule();
+
+
+typedef struct CliNamespace{
+    CliEntryModule entry;
+    CliFlagModule  flag;
+}CliNamespace;
+
+CliNamespace newCliNamespace();
+
+
+
+
+
+
+
+privateCliGarbage *private_cli_newGarbageArray(){
+    privateCliGarbage *self = (privateCliGarbage*) malloc(sizeof (privateCliGarbage));
+    self->values = (privateCliGarbageElement**)(0);
+    self->size = 0;
+    return self;
+}
+
+void private_CliGarbage_append(privateCliGarbage*self, int type, void *value){
+    self->values = (privateCliGarbageElement**) realloc(self->values, (self->size + 1) * sizeof (privateCliGarbageElement**));
+    privateCliGarbageElement *new_garbage = (privateCliGarbageElement*) malloc(sizeof (privateCliGarbageElement));
+    new_garbage->type = type;
+    new_garbage->value = value;
+    self->values[self->size] = new_garbage;
+    self->size+=1;;
+    
+}
+
+void private_cli_free_garbage(privateCliGarbage*self){
+    for(int i = 0 ; i < self->size; i++){
+        privateCliGarbageElement *current = self->values[i];
+        if(current->type == PRIVATE_CLI_CHAR_TRASH){
+            free(current->value);
+        }
+        if(current->type == PRIVATE_CLI_FLAG_TRASH){
+            CliFlag *current_flag = (CliFlag*)current->value;
+            private_cli_CliFlag_free(current_flag);
+        }
+        free(current);
+    }
+    free(self->values);
+    free(self);
+}
+
+
+
+
+
+
+
+int private_cli_compare_elements_size(const void *element1,const  void *element2){
+    CTextStack  *s1 = *(CTextStack**)element1;
+    CTextStack  *s2 = *(CTextStack**)element2;
+
+    return (int)(s2->size - s1->size);
+
+
+}
+
+
+void private_cli_sort_text_arrays_by_size(CTextArray *elements){
+    qsort(elements->stacks, (size_t)elements->size,sizeof(CTextStack **),private_cli_compare_elements_size);
+}
+
+
+CTextArray * private_cli_parse_flags(const char *flags,bool case_sensitive){
+    CTextArray *elements = CTextArray_split(flags,"|");
+    private_cli_sort_text_arrays_by_size(elements);
+
+    CTextArray_foreach(elements,CTextStack_self_trim);
+
+    if(!case_sensitive){
+        CTextArray_foreach(elements,CTextStack_self_lower);
+    }
+    return elements;
+}
+
+CTextStack *private_cli_get_flag_if_its_an_flag(CTextArray *identifiers,CTextStack *possible_flag,bool case_sensitve){
+
+    CTextStack *formated_possible_flag = CTextStack_clone(possible_flag);
+    if(!case_sensitve){
+        CTextStack_self_lower(formated_possible_flag);
+    }
+
+
+    for(int i =0; i < identifiers->size; i++){
+
+        CTextStack  *current_identifier = identifiers->stacks[i];
+
+        if(CTextStack_starts_with(formated_possible_flag,current_identifier->rendered_text)){
+            CTextStack_self_substr(formated_possible_flag, (long)current_identifier->size,-1);
+            
+            return formated_possible_flag;
+        }
+
+    }
+    CTextStack_free(formated_possible_flag);
+
+    return NULL;
+}
+int private_cli_get_type_from_array(CTextArray *elements,int position){
+    if(position >=elements->size){
+        return CLI_NOT_EXIST;
+    }
+    CTextStack *current = elements->stacks[position];
+    return CTextStack_typeof(current);
+}
+bool private_cli_verifiy_if_element_is_numeric(CTextArray *elements,int position){
+    int type = private_cli_get_type_from_array(elements,position);
+    if(type ==CLI_LONG || type == CLI_DOUBLE){
+        return true;
+    }
+    return false;
+}
+
+
+const char * private_cli_get_type_in_str_from_array(CTextArray *elements,int position){
+    if(position >=elements->size){
+        return  "not exist";
+    }
+    CTextStack *current = elements->stacks[position];
+    return CTextStack_typeof_in_str(current);
+}
+
+char * private_cli_get_str_from_array(privateCliGarbage *garbage, CTextArray *elements, int position,bool case_sensitive){
+    if(position >=elements->size){
+        return NULL;
+    }
+    CTextStack *current = elements->stacks[position];
+    char *result;
+    if(case_sensitive){
+        CTextStack *formated = CTextStack_lower(current);
+        result = CTextStack_self_transform_in_string_and_self_clear(formated);
+    } else{
+        result =strdup(current->rendered_text);
+    }
+
+    private_CliGarbage_append(garbage, PRIVATE_CLI_CHAR_TRASH, result);
+    return result;
+}
+
+long private_cli_get_long_from_array(CTextArray *elements,int position){
+    if(position >=elements->size){
+        return -1;
+    }
+    CTextStack *current = elements->stacks[position];
+    return CTextStack_parse_to_integer(current);
+}
+
+double private_cli_get_double_from_array(CTextArray *elements,int position){
+    if(position >=elements->size){
+        return -1;
+    }
+    CTextStack *current = elements->stacks[position];
+    return CTextStack_parse_to_double(current);
+}
+
+bool private_cli_get_bool_from_array(CTextArray *elements,int position){
+    if(position >=elements->size){
+        return false;
+    }
+    CTextStack *current = elements->stacks[position];
+    return CTextStack_parse_to_bool(current);
+}
+
+
+CliFlag *private_cli_newCliFlag(){
+    CliFlag *self = (CliFlag*) malloc(sizeof(CliFlag));
+    *self = (CliFlag){0};
+    self->elements = newCTextArray();
+    self->private_garbage = private_cli_newGarbageArray();
+    return self;
+}
+
+void private_cli_CliFlag_free(CliFlag *self){
+    CTextArray_free(self->elements);
+    private_cli_free_garbage(self->private_garbage);
+    free(self);
+}
+
+
+int CliFlag_typeof_arg(CliFlag *self, int position){
+    return private_cli_get_type_from_array(self->elements,position);
+}
+
+bool CliFlag_is_numeric(CliFlag *self, int position){
+    return private_cli_verifiy_if_element_is_numeric(self->elements,position);
+}
+
+const char *CliFlag_typeof_arg_in_str(CliFlag *self, int position){
+    return private_cli_get_type_in_str_from_array(self->elements,position);
+}
+
+char* CliFlag_get_str(CliFlag *self, int position, bool case_sensitive){
+    return private_cli_get_str_from_array(self->private_garbage,self->elements, position,case_sensitive);
+}
+
+long  CliFlag_get_long(CliFlag *self, int position){
+    return private_cli_get_long_from_array(self->elements,position);
+}
+
+double CliFlag_get_double(CliFlag *self, int position){
+    return private_cli_get_double_from_array(self->elements,position);
+}
+
+bool CliFlag_get_bool(CliFlag *self, int position){
+    return private_cli_get_bool_from_array(self->elements,position);
+}
+
+void CliFlag_represent(CliFlag *self){
+    printf("exist: %s\n",self->exist ?"true":"false");
+    printf("size :%d\n",self->size);
+    printf("flags: \n");
+    CTextArray_represent(self->elements);
+}
+
+
+
+
+CliEntry * newCliEntry(int argc, char **argv){
+    CliEntry *self = (CliEntry*) malloc(sizeof (CliEntry));
+    self->size = argc;
+    self->elements = newCTextArray();
+    self->private_garbage = private_cli_newGarbageArray();
+
+    self->flag_identifiers = " - | -- | --- ";
+    
+    for(int i = 0; i < argc; i++){
+        CTextArray_append_string(self->elements,argv[i]);
+    }
+    return self;
+
+}
+
+
+
+CliFlag *CliEntry_get_flag(CliEntry *self,const char *flags,bool case_sensitive){
+    CTextArray *identifiers = private_cli_parse_flags(self->flag_identifiers,case_sensitive);
+    CTextArray *formated_flags = private_cli_parse_flags(flags,case_sensitive);
+
+    CliFlag *flag = private_cli_newCliFlag();
+    private_CliGarbage_append(self->private_garbage, PRIVATE_CLI_FLAG_TRASH, flag);
+    for(int i = 0; i < self->size;i++){
+
+
+        CTextStack *possible_flag = private_cli_get_flag_if_its_an_flag(identifiers,self->elements->stacks[i],case_sensitive);
+        //means its an flag
+        if(possible_flag){
+            //means its the  end of current flag and start of other
+            if(flag->exist){
+                CTextStack_free(possible_flag);
+                break;
+            }
+            else{
+                if(CTextArray_includes(formated_flags,possible_flag->rendered_text)){
+                    flag->exist = true;
+                }
+            }
+            CTextStack_free(possible_flag);
+        }
+
+        else{
+            //means its an normal atribute
+            if(flag->exist){
+                CTextArray_append_string(flag->elements,self->elements->stacks[i]->rendered_text);
+            }
+        }
+    }
+    flag->size = (int)flag->elements->size;
+
+    CTextArray_free(identifiers);
+    CTextArray_free(formated_flags);
+
+    return flag;
+
+}
+
+int CliEntry_typeof_arg(CliEntry *self,int position){
+    return private_cli_get_type_from_array(self->elements,position);
+}
+
+bool CliEntry_is_numeric(CliEntry *self,int position){
+    return private_cli_verifiy_if_element_is_numeric(self->elements,position);
+}
+
+const char *CliEntry_typeof_arg_in_str(CliEntry *self,int position){
+    return private_cli_get_type_in_str_from_array(self->elements,position);
+}
+
+char*   CliEntry_get_str(CliEntry *self, int position, bool case_sensitive){
+    return private_cli_get_str_from_array(self->private_garbage, self->elements, position, case_sensitive);
+}
+
+long CliEntry_get_long(CliEntry *self, int position){
+    return private_cli_get_long_from_array(self->elements,position);
+}
+
+double CliEntry_get_double(CliEntry *self, int position){
+    return private_cli_get_double_from_array(self->elements,position);
+}
+
+bool CliEntry_get_bool(CliEntry *self, int position){
+    return private_cli_get_bool_from_array(self->elements,position);
+}
+
+void  CliEntry_represent(CliEntry *self){
+    printf("size :%d\n",self->size);
+    printf("args:\n");
+    CTextArray_represent(self->elements);
+}
+
+void CliEntry_free(struct CliEntry *self){
+    CTextArray_free(self->elements);
+    private_cli_free_garbage(self->private_garbage);
+    free(self);
+}
+
+
+
+
+
+CliEntryModule newCliEntryModule(){
+    CliEntryModule self = {0};
+    self.newEntry = newCliEntry;
+    self.is_numeric = CliEntry_is_numeric;
+    self.typeof_arg = CliEntry_typeof_arg;
+    self.typeof_arg_in_str = CliEntry_typeof_arg_in_str;
+    self.get_flag =CliEntry_get_flag;
+    self.get_long = CliEntry_get_long;
+    self.get_str = CliEntry_get_str;
+    self.get_double = CliEntry_get_double;
+    self.get_bool = CliEntry_get_bool;
+    self.represent = CliEntry_represent;
+    self.free = CliEntry_free;
+    return self;
+}
+
+
+CliFlagModule newCliFlagModule(){
+    CliFlagModule self = {0};
+    self.typeof_arg = CliFlag_typeof_arg;
+    self.is_numeric =CliFlag_is_numeric;
+    self.type_of_arg_in_str = CliFlag_typeof_arg_in_str;
+    self.get_str = CliFlag_get_str;
+    self.get_long = CliFlag_get_long;
+    self.get_double = CliFlag_get_double;
+    self.get_bool = CliFlag_get_bool;
+    self.represent =CliFlag_represent;
+    return self;
+}
+
+
+CliNamespace newCliNamespace(){
+    CliNamespace self = {0};
+    self.flag = newCliFlagModule();
+    self.entry = newCliEntryModule();
+    return self;
+}
+
