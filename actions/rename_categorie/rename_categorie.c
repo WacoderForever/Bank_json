@@ -9,13 +9,8 @@ bool rename_categorie(struct DtwResource *database,CliEntry *entry){
         free(categorie_id);
         return true;
     }
-    char *new_name;
-    printf("Enter new name:");
-    scanf("%[^\n]s",new_name);
+    char *new_name=get_new_name(entry);
     rename_categorie_by_id(database,categorie_id,new_name);
     printf("Categorie %s renamed to %s\n",name,new_name);
-    free(name);
-    free(new_name);
-    free(categorie_id);
     return false;
 }
