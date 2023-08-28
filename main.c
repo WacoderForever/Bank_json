@@ -42,7 +42,7 @@ int main(int argc , char **argv){
     }
 
     else{
-        printf("option not in ('add-categorie','remove-categorie')\n");
+        printf("option not in ('add-categorie','remove-categorie','rename-categorie')\n");
         error = true;
     }
 
