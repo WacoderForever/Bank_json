@@ -1,5 +1,5 @@
 char *get_interface_name(CliEntry *entry){
-    CliFlag *name_flag = cli.entry.get_flag(entry,"name | n ",CLI_NOT_CASE_SENSITIVE);
+    CliFlag *name_flag = cli.entry.get_flag(entry,"name | n ",CLI_CASE_SENSITIVE);
 
     if(name_flag->exist == false){
         printf("name its required\n");
