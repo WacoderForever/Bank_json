@@ -1,0 +1,1 @@
+bool add_account(struct DtwResource *database,CliEntry *entry);
