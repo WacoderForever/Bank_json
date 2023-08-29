@@ -26,7 +26,7 @@ int main(int argc , char **argv){
     }
     DtwResource *database = dtw.resource.newResource("data");
 
-    char * option = cli.entry.get_str(entry,1,CLI_NOT_CASE_SENSITIVE);
+    char * option = cli.entry.get_str(entry,1,CLI_CASE_SENSITIVE);
 
     
     bool error = false;
@@ -40,7 +40,7 @@ int main(int argc , char **argv){
     else if(strcmp(option,"rename-categorie")==0){
         error=rename_categorie(database,entry);
     }
-    else if(strcmp(option,"add-account") ==0){
+    if(!strcmp(option,"add-account")){
         error = add_account(database,entry);
     }
 
