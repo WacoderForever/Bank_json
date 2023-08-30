@@ -3,3 +3,4 @@
 #include "rename_categorie/rename_categorie.h"
 #include "add_account/add_account.h"
 #include "remove_account/remove_account.h"
+#include "rename_account/rename_account.h"

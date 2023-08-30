@@ -1,0 +1,1 @@
+bool rename_account(struct DtwResource *database,CliEntry *entry);

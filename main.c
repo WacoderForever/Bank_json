@@ -48,7 +48,10 @@ int main(int argc , char **argv){
         
         error = remove_account(database,entry);
     }
-
+    else if(!strcmp(option,"rename-account")){
+        
+        error = rename_account(database,entry);
+    }
     else{
         printf("option not in ('add-categorie','remove-categorie','rename-categorie','add-account','remove-account')\n");
         error = true;
