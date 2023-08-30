@@ -8,4 +8,4 @@ void rename_account(struct DtwResource *database,const char *id,const char *new_
 
 void create_account(struct DtwResource *database,const char *name);
 
-void remove_account(struct DtwResource *database,const char *name);
+void remove_account_by_id(struct DtwResource *database,const char *name);

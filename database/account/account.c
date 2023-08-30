@@ -22,8 +22,9 @@ char *find_account_id_by_name(struct DtwResource *database,const char *name){
         cJSON *current=cJSON_GetArrayItem(element,i);
         if(current){
             if(!(strcmp(current->valuestring,name))){
+                char *r=strdup(current->string);
                 cJSON_Delete(element);
-                return current->string;
+                return r;
             }
         }
     }
@@ -49,8 +50,8 @@ void create_account(struct DtwResource *database,const char *name){
     
 }
 
-void remove_account(struct DtwResource *database,const char *name){
+void remove_account_by_id(struct DtwResource *database,const char *id){
     cJSON *element=get_account_json(database);
-    cJSON_DeleteItemFromObject(element,name);
+    cJSON_DeleteItemFromObject(element,id);
     add_json_to_resource_and_delete_json(get_account_resource(database),element);
 }

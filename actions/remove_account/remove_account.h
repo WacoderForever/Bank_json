@@ -1,0 +1,1 @@
+bool remove_account(struct DtwResource *database,CliEntry *entry);

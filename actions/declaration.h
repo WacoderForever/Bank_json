@@ -2,3 +2,4 @@
 #include "remove_categorie/remove_categorie.h"
 #include "rename_categorie/rename_categorie.h"
 #include "add_account/add_account.h"
+#include "remove_account/remove_account.h"
