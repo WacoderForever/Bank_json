@@ -1,6 +1,6 @@
 DtwResource *get_account_resource(struct DtwResource *database){
     DtwResource *props=dtw.resource.sub_resource(database,"props");
-    DtwResource *account=dtw.resource.sub_resource(database,"account.json");
+    DtwResource *account=dtw.resource.sub_resource(props,"account.json");
     return account;
 }
 
@@ -46,6 +46,7 @@ void create_account(struct DtwResource *database,const char *name){
     cJSON_AddStringToObject(element,id,name);
     free(id);
     add_json_to_resource_and_delete_json(get_account_resource(database),element);
+    
 }
 
 void remove_account(struct DtwResource *database,const char *name){

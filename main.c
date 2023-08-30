@@ -28,7 +28,7 @@ int main(int argc , char **argv){
 
     char * option = cli.entry.get_str(entry,1,CLI_CASE_SENSITIVE);
 
-    
+
     bool error = false;
     if(strcmp(option,"add-categorie") ==0){
         error = add_categorie(database,entry);
@@ -40,7 +40,8 @@ int main(int argc , char **argv){
     else if(strcmp(option,"rename-categorie")==0){
         error=rename_categorie(database,entry);
     }
-    if(!strcmp(option,"add-account")){
+    else if(!strcmp(option,"add-account")){
+        
         error = add_account(database,entry);
     }
 
