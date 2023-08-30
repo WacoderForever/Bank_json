@@ -34,6 +34,7 @@ char *find_account_id_by_name(struct DtwResource *database,const char *name){
 
 void rename_account_name(struct DtwResource *database,const char *id,const char *new_name){
     cJSON *element=get_account_json(database);
+    
     cJSON_DeleteItemFromObject(element,id);
     cJSON_AddStringToObject(element,id,new_name);
 
