@@ -9,8 +9,13 @@ bool rename_categorie(struct DtwResource *database,CliEntry *entry){
         free(categorie_id);
         return true;
     }
+
     char *new_name=get_new_name(entry);
-    rename_categorie_by_id(database,categorie_id,new_name);
+    int k=rename_categorie_by_id(database,categorie_id,new_name);
+    if(k!=1){
     printf("Categorie %s renamed to %s\n",name,new_name);
+    return false;
+    }
+    printf("A category  with the name '%s' already exists\n",new_name);
     return false;
 }

@@ -32,15 +32,28 @@ char * find_categorie_id_by_name(DtwResource *database,const char *name){
     return NULL;
 }
 
-void rename_categorie_by_id(DtwResource *database, const char *id, const char *new_name){
+int  rename_categorie_by_id(DtwResource *database, const char *id, const char *new_name){
     cJSON *element = get_categorie_json(database);
-    cJSON_DeleteItemFromObject(element,id);
-    cJSON_AddStringToObject(element,id,new_name);
-    
-    add_json_to_resource_and_delete_json(
-         get_categories_resource(database),
-         element
-    );
+    int size=cJSON_GetArraySize(element);
+    int k=0;
+    for(int i=0;i<size;i++){
+        cJSON *current=cJSON_GetArrayItem(element,i);
+        if(!(strcmp(current->valuestring,new_name))){
+            k=1;
+            break;
+        }
+    }
+    if(k!=1){
+        cJSON_DeleteItemFromObject(element,id);
+        cJSON_AddStringToObject(element,id,new_name);
+        
+        add_json_to_resource_and_delete_json(
+            get_categories_resource(database),
+            element
+        );
+        return k;
+    }
+    return k;
 }
 
 void remove_categorie_by_id(DtwResource *database, const char *id){
